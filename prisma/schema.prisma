@@ -1,0 +1,210 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─── Auth ────────────────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(CUSTOMER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+  orders   Order[]
+
+  @@map("users")
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+  @@map("verification_tokens")
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+// ─── Catálogo ────────────────────────────────────────────────────────────────
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  images      String[] // array de URLs
+  status      ProductStatus @default(DRAFT)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  attributes ProductAttribute[]
+  variants   ProductVariant[]
+
+  @@map("products")
+}
+
+model ProductAttribute {
+  id        String   @id @default(cuid())
+  name      String   // ex: "Cor", "Tamanho"
+  productId String
+
+  product Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  values  AttributeValue[]
+
+  @@map("product_attributes")
+}
+
+model AttributeValue {
+  id          String @id @default(cuid())
+  value       String // ex: "Vermelho", "P", "M"
+  attributeId String
+
+  attribute ProductAttribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  variants  ProductVariant[] @relation("VariantAttributeValues")
+
+  @@map("attribute_values")
+}
+
+model ProductVariant {
+  id         String   @id @default(cuid())
+  sku        String   @unique
+  price      Int      // centavos — ex: R$ 18900 = 18900
+  stock      Int      @default(0)
+  images     String[]
+  weight     Float    // gramas — para cálculo de frete
+  width      Float    // cm
+  height     Float    // cm
+  length     Float    // cm
+  productId  String
+
+  product         Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  attributeValues AttributeValue[] @relation("VariantAttributeValues")
+  orderItems      OrderItem[]
+
+  @@map("product_variants")
+}
+
+enum ProductStatus {
+  ACTIVE
+  DRAFT
+}
+
+// ─── Pedidos ─────────────────────────────────────────────────────────────────
+
+model Order {
+  id                 String      @id @default(cuid())
+  status             OrderStatus @default(PENDING)
+  pagSeguroOrderId   String?
+  paymentMethod      String?     // "CREDIT_CARD" | "BOLETO" | "PIX"
+  subtotal           Int         // centavos
+  discountAmount     Int         @default(0)
+  shippingPrice      Int         @default(0)
+  total              Int         // centavos
+  shippingAddress    Json        // { name, street, number, complement, district, city, state, zipCode }
+  shippingService    String?     // ex: "PAC", "SEDEX"
+  trackingCode       String?
+  promoCodeUsed      String?
+  userId             String?
+  customerName       String
+  customerEmail      String
+  customerDocument   String      // CPF ou CNPJ
+  customerPhone      String?
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  user  User?       @relation(fields: [userId], references: [id])
+  items OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  variantId String
+  quantity  Int
+  unitPrice Int    // centavos — preço no momento da compra
+
+  order   Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variant ProductVariant @relation(fields: [variantId], references: [id])
+
+  @@map("order_items")
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+// ─── Promoções ───────────────────────────────────────────────────────────────
+
+model PromoCode {
+  id        String         @id @default(cuid())
+  code      String         @unique
+  type      PromoCodeType
+  value     Int            // centavos (fixed) ou pontos percentuais (percent) ex: 15 = 15%
+  minOrder  Int?           // valor mínimo do pedido em centavos para aplicar
+  maxUses   Int?
+  usedCount Int            @default(0)
+  active    Boolean        @default(true)
+  expiresAt DateTime?
+  createdAt DateTime       @default(now())
+
+  @@map("promo_codes")
+}
+
+enum PromoCodeType {
+  PERCENT
+  FIXED
+}

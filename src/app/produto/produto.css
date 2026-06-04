@@ -1,0 +1,349 @@
+/* ============================================================
+   Carnavei — Página de Produto
+   Layout 3 colunas: esquerda fixa | galeria central | thumbnails direita
+   ============================================================ */
+
+.pdp-shell {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 200px 1fr 80px;
+  grid-template-rows: 1fr 48px;
+  background: #f0efed;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  color: #2B2530;
+}
+
+/* ── Coluna esquerda ─────────────────────────────────────── */
+.pdp-left {
+  grid-column: 1;
+  grid-row: 1;
+  padding: 36px 22px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(0, 0, 0, 0.07);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.pdp-left::-webkit-scrollbar { display: none; }
+
+.pdp-back {
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9A9298;
+  text-decoration: none;
+  margin-bottom: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 150ms;
+}
+.pdp-back:hover { color: #2B2530; }
+
+.pdp-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #D46429;
+  margin-bottom: 9px;
+}
+
+.pdp-name {
+  font-family: var(--font-heading, Georgia, serif);
+  font-size: 1.45rem;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.1;
+  color: #2B2530;
+  margin: 0 0 16px;
+}
+
+.pdp-price {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #2B2530;
+  margin-bottom: 4px;
+}
+
+.pdp-installment {
+  font-size: 11px;
+  color: #9A9298;
+  margin-bottom: 32px;
+}
+
+.pdp-label {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #9A9298;
+  margin-bottom: 8px;
+}
+
+.pdp-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 22px;
+}
+
+.pdp-size-btn {
+  min-width: 42px;
+  height: 32px;
+  padding: 0 11px;
+  border: 1px solid #D8D0C8;
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 11.5px;
+  color: #2B2530;
+  cursor: none;
+  transition: border-color 150ms, background 150ms, color 150ms;
+}
+.pdp-size-btn:hover { border-color: #2B2530; }
+.pdp-size-btn.active {
+  background: #2B2530;
+  border-color: #2B2530;
+  color: #f0efed;
+}
+.pdp-size-btn.off {
+  color: #C0B8B0;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.pdp-add-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 999px;
+  border: none;
+  background: #D46429;
+  color: #FFF7F1;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: none;
+  transition: background 150ms;
+  margin-bottom: 14px;
+  letter-spacing: 0.02em;
+}
+.pdp-add-btn:hover { background: #A6471A; }
+
+.pdp-added {
+  font-size: 11px;
+  color: #046A37;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 14px;
+  animation: pdpFadeIn 200ms ease;
+}
+
+.pdp-shipping {
+  font-size: 10.5px;
+  color: #9A9298;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ── Galeria central ─────────────────────────────────────── */
+.pdp-gallery {
+  grid-column: 2;
+  grid-row: 1;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  padding: 48px 56px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+.pdp-gallery::-webkit-scrollbar { display: none; }
+
+.pdp-gallery-item {
+  width: 100%;
+  max-width: 580px;
+}
+.pdp-gallery-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+}
+
+/* ── Coluna direita — thumbnails ─────────────────────────── */
+.pdp-right {
+  grid-column: 3;
+  grid-row: 1;
+  padding: 36px 10px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  border-left: 1px solid rgba(0, 0, 0, 0.07);
+}
+.pdp-right::-webkit-scrollbar { display: none; }
+
+.pdp-other-link {
+  display: block;
+  text-decoration: none;
+  opacity: 0.45;
+  transition: opacity 200ms;
+}
+.pdp-other-link:hover { opacity: 1; }
+.pdp-other-link img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+.pdp-other-label {
+  display: block;
+  font-size: 7.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9A9298;
+  text-align: center;
+  margin-top: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Barra inferior — botão Details ─────────────────────── */
+.pdp-details-bar {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.pdp-details-trigger {
+  background: none;
+  border: none;
+  cursor: none;
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #9A9298;
+  padding: 0 28px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  transition: color 150ms;
+}
+.pdp-details-trigger:hover { color: #2B2530; }
+
+/* ── Painel slide-up Details ─────────────────────────────── */
+.pdp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(43, 37, 48, 0.06);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: pdpFadeIn 200ms ease;
+}
+
+.pdp-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 81;
+  background: #f0efed;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 44px 48px 56px calc(200px + 56px);
+  max-height: 52vh;
+  overflow-y: auto;
+  animation: pdpSlideUp 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pdp-panel-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  background: none;
+  border: none;
+  cursor: none;
+  color: #9A9298;
+  display: flex;
+  padding: 4px;
+  transition: color 150ms;
+}
+.pdp-panel-close:hover { color: #2B2530; }
+
+.pdp-panel-blurb {
+  font-family: var(--font-heading, Georgia, serif);
+  font-size: 1.25rem;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #2B2530;
+  margin: 0 0 20px;
+  max-width: 540px;
+}
+
+.pdp-panel-spec {
+  font-size: 11.5px;
+  line-height: 1.75;
+  color: #9A9298;
+  letter-spacing: 0.03em;
+  max-width: 540px;
+}
+
+/* ── Animações ───────────────────────────────────────────── */
+@keyframes pdpFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes pdpSlideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+/* ── Mobile ──────────────────────────────────────────────── */
+@media (max-width: 680px) {
+  .pdp-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr 48px;
+  }
+
+  .pdp-left {
+    grid-column: 1;
+    grid-row: 1;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+    padding: 24px 20px;
+  }
+  .pdp-back { margin-bottom: 24px; }
+
+  .pdp-gallery {
+    grid-column: 1;
+    grid-row: 2;
+    padding: 24px 20px 60px;
+  }
+
+  .pdp-right { display: none; }
+
+  .pdp-details-bar {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .pdp-panel {
+    padding: 36px 20px 48px;
+  }
+}
