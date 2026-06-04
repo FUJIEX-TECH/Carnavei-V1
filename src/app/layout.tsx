@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   title: "Carnavei — Acessórios Artesanais",
   description:
     "Acessórios artesanais femininos feitos à mão. Bolsas, chokers, broches e muito mais.",
+  icons: {
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({

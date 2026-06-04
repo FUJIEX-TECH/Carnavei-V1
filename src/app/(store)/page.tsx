@@ -7,6 +7,14 @@ import { buttonVariants } from "@/components/ui/button";
 const PRODUCTS_MOCK = [
   {
     id: "1",
+    slug: "choker-branca",
+    name: "Choker Branca",
+    price: 15900,
+    eyebrow: "COPA 2026",
+    image: "/images/choker-branca-2.jpg",
+  },
+  {
+    id: "2",
     slug: "bolsa-canarinho",
     name: "Bolsa Canarinho",
     price: 18900,
@@ -14,28 +22,20 @@ const PRODUCTS_MOCK = [
     image: "/images/bolsa-canarinho-ensaio-01.jpg",
   },
   {
-    id: "2",
-    slug: "choker",
-    name: "Choker",
-    price: 8900,
-    eyebrow: "EDIÇÃO LIMITADA",
-    image: "/images/choker-ensaio-01.jpg",
-  },
-  {
     id: "3",
-    slug: "corrente-corpo",
-    name: "Corrente corpo",
-    price: 12000,
-    eyebrow: "NOVO",
+    slug: "corrente-torcida",
+    name: "Corrente Torcida",
+    price: 16900,
+    eyebrow: "MAIS AMADA",
     image: "/images/chain-ensaio-01.jpg",
   },
   {
     id: "4",
-    slug: "chain",
-    name: "Chain",
-    price: 6500,
-    eyebrow: "COLEÇÃO COPA",
-    image: "/images/chain-ensaio-02.jpg",
+    slug: "choker-bandeira",
+    name: "Choker Bandeira",
+    price: 14900,
+    eyebrow: "FEITO À MÃO",
+    image: "/images/choker-ensaio-01.jpg",
   },
 ];
 

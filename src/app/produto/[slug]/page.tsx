@@ -1,8 +1,8 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { useState, useRef } from "react";
-import { Check } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Check, X, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { PRODUCTS, BRL } from "@/lib/products";
 import { ProductDetailsSection } from "@/components/store/ProductDetailsSection";
@@ -19,7 +19,23 @@ export default function ProductPage() {
   });
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
   const detailsRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (lightboxIdx === null) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightboxIdx(null);
+      if (e.key === "ArrowLeft")
+        setLightboxIdx((i) => (i !== null && i > 0 ? i - 1 : i));
+      if (e.key === "ArrowRight")
+        setLightboxIdx((i) =>
+          i !== null && product && i < product.images.length - 1 ? i + 1 : i
+        );
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [lightboxIdx, product]);
 
   const scrollToDetails = () =>
     detailsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -104,9 +120,14 @@ export default function ProductPage() {
       {/* ── Galeria central ── */}
       <main className="pdp-gallery">
         {product.images.map((src, i) => (
-          <div key={i} className="pdp-gallery-item">
+          <div
+            key={i}
+            className="pdp-gallery-item pdp-gallery-item--clickable"
+            onClick={() => setLightboxIdx(i)}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={src} alt={`${product.name} ${i + 1}`} />
+            <span className="pdp-gallery-expand" aria-hidden>⤢</span>
           </div>
         ))}
         <ProductDetailsSection product={product} ref={detailsRef} />
@@ -129,6 +150,40 @@ export default function ProductPage() {
           Detalhes ↓
         </button>
       </div>
+
+      {/* ── Lightbox ── */}
+      {lightboxIdx !== null && (
+        <div className="pdp-lightbox" onClick={() => setLightboxIdx(null)}>
+          {lightboxIdx > 0 && (
+            <button
+              className="pdp-lightbox-nav pdp-lightbox-prev"
+              onClick={(e) => { e.stopPropagation(); setLightboxIdx(lightboxIdx - 1); }}
+            >
+              <ChevronLeft size={28} />
+            </button>
+          )}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={product.images[lightboxIdx]}
+            alt={`${product.name} ${lightboxIdx + 1}`}
+            onClick={(e) => e.stopPropagation()}
+          />
+          {lightboxIdx < product.images.length - 1 && (
+            <button
+              className="pdp-lightbox-nav pdp-lightbox-next"
+              onClick={(e) => { e.stopPropagation(); setLightboxIdx(lightboxIdx + 1); }}
+            >
+              <ChevronRight size={28} />
+            </button>
+          )}
+          <button
+            className="pdp-lightbox-close"
+            onClick={() => setLightboxIdx(null)}
+          >
+            <X size={22} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
