@@ -76,13 +76,14 @@ function CartDrawer({
 
 export function StorefrontApp() {
   const products = PRODUCTS;
+  const heroProducts = products.filter(p => !p.heroExclude);
   const [activeIndex, setActiveIndex] = useState(0);
   const [cartOpen, setCartOpen] = useState(false);
   const [cart, setCart] = useState<CartLine[]>([]);
 
   // Refs for each section (products + grid)
   const containerRef = useRef<HTMLDivElement>(null);
-  const sectionRefs = useRef<(HTMLElement | null)[]>(Array(products.length).fill(null));
+  const sectionRefs = useRef<(HTMLElement | null)[]>(Array(heroProducts.length).fill(null));
   const gridRef = useRef<HTMLElement | null>(null);
 
   // IntersectionObserver: mark sections in-view + track active index
@@ -138,7 +139,7 @@ export function StorefrontApp() {
     setCart((prev) => prev.filter((_, j) => j !== i));
 
   const count = cart.reduce((s, l) => s + l.qty, 0);
-  const dark = activeIndex < products.length; // hero sections are dark
+  const dark = activeIndex < heroProducts.length; // hero sections are dark
 
   return (
     <div className="cv-shell">
@@ -146,7 +147,7 @@ export function StorefrontApp() {
       <div className="cv-store" ref={containerRef}>
 
         {/* Product hero sections */}
-        {products.map((p, i) => (
+        {heroProducts.map((p, i) => (
           <section
             key={p.id}
             ref={(el) => { sectionRefs.current[i] = el; }}
@@ -174,7 +175,7 @@ export function StorefrontApp() {
             </div>
 
             {/* Counter bottom-right */}
-            <div className="cv-snap-counter">{i + 1} / {products.length}</div>
+            <div className="cv-snap-counter">{i + 1} / {heroProducts.length}</div>
 
             {/* Scroll hint on first section only */}
             {i === 0 && (
@@ -205,7 +206,7 @@ export function StorefrontApp() {
                 >
                   <div className="cv-card-frame">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={p.images[0]} alt={p.name} />
+                    <img src={p.thumbnail ?? p.images[0]} alt={p.name} />
                   </div>
                   <div className="cv-card-meta">
                     <p className="cv-card-eyebrow">{p.eyebrow}</p>
@@ -248,7 +249,7 @@ export function StorefrontApp() {
 
       {/* Sidebar product nav */}
       <nav className={`cv-snap-nav${dark ? " on-dark" : ""}`}>
-        {products.map((p, i) => (
+        {heroProducts.map((p, i) => (
           <button
             key={p.id}
             className={activeIndex === i ? "active" : ""}
@@ -258,8 +259,8 @@ export function StorefrontApp() {
           </button>
         ))}
         <button
-          className={`cv-nav-all${activeIndex === products.length ? " active" : ""}`}
-          onClick={() => scrollToSection(products.length)}
+          className={`cv-nav-all${activeIndex === heroProducts.length ? " active" : ""}`}
+          onClick={() => scrollToSection(heroProducts.length)}
         >
           Todos os produtos
         </button>
