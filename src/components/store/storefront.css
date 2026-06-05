@@ -256,6 +256,8 @@
 }
 .cv-card {
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
   opacity: 0;
   transform: translateY(12px);
   transition:
@@ -266,6 +268,7 @@
 .cv-snap-section.in-view .cv-card:nth-child(2) { opacity: 1; transform: none; transition-delay: 180ms; }
 .cv-snap-section.in-view .cv-card:nth-child(3) { opacity: 1; transform: none; transition-delay: 240ms; }
 .cv-snap-section.in-view .cv-card:nth-child(4) { opacity: 1; transform: none; transition-delay: 300ms; }
+.cv-snap-section.in-view .cv-card:nth-child(5) { opacity: 1; transform: none; transition-delay: 360ms; }
 
 .cv-card-frame {
   aspect-ratio: 1 / 1;
@@ -349,7 +352,7 @@
   cursor: pointer;
   user-select: none;
 }
-.cv-top img { height: 68px; width: auto; display: block; }
+.cv-top img { height: 56px; width: auto; display: block; }
 .cv-top.on-dark img { filter: brightness(0) invert(1); opacity: .94; }
 
 .cv-cart-btn {
@@ -706,28 +709,62 @@
 
 /* ── Mobile ────────────────────────────────────────────────── */
 @media (max-width: 640px) {
+  /* Nav lateral — oculta no mobile */
   .cv-snap-nav { display: none; }
 
+  /* Scrim — muda de horizontal para vertical (protege texto embaixo) */
+  .cv-hero-scrim {
+    background: linear-gradient(
+      to top,
+      rgba(20, 16, 24, .76) 0%,
+      rgba(20, 16, 24, .42) 35%,
+      rgba(20, 16, 24, 0)   65%
+    );
+  }
+
+  /* Bloco de conteúdo — alinhado à esquerda, espaço para o chrome do rodapé */
   .cv-snap-content {
     left: 20px;
     right: 20px;
+    bottom: 96px;
     max-width: 100%;
+    text-align: left;
+    align-items: flex-start;
   }
 
   .cv-snap-name { font-size: 2.2rem; }
 
+  /* Scroll hint — dispensável no mobile */
+  .cv-scroll-hint { display: none; }
+
+  /* Counter — menos intrusivo, some com o conteúdo de rodapé */
+  .cv-snap-counter {
+    bottom: 72px;
+    right: 20px;
+  }
+
+  /* Chrome */
+  .cv-top { left: 20px; top: 20px; }
+  .cv-top img { height: 48px; }
+  .cv-cart-btn { left: 20px; bottom: 32px; }
+  .cv-handle { bottom: 10px; }
+
+  /* Grid section — scrollável para caber 5 produtos em 2 colunas */
+  .cv-snap-section.cv-snap-grid {
+    overflow-y: auto;
+    align-items: flex-start;
+  }
   .cv-product-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
-  .cv-grid-inner { padding: 0 20px; }
+  .cv-grid-inner {
+    padding: 80px 20px 48px;
+    width: 100%;
+  }
+  .cv-grid-header { margin-bottom: 24px; }
 
-  .cv-pdp-drawer { width: 100vw; }
-
-  .cv-top { left: 20px; top: 20px; }
-  .cv-cart-btn { left: 20px; }
-
-  /* use proximity on mobile for gentler feel */
+  /* Scroll snap — proximity no mobile (menos agressivo) */
   .cv-store { scroll-snap-type: y proximity; }
 }
 

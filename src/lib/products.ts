@@ -6,6 +6,7 @@ export type Product = {
   eyebrow: string;
   tagline: string;
   hero: string;
+  heroPosition?: string;
   images: string[];
   blurb: string;
   details: string;
@@ -19,9 +20,9 @@ export const BRL = (n: number) =>
 export const PRODUCTS: Product[] = [
   {
     id: "choker-branca",
-    name: "Choker Branca",
+    name: "Choker Bandana Branca",
     category: "Choker",
-    price: 159,
+    price: 60,
     eyebrow: "Copa 2026",
     tagline: "O branco que torce junto.",
     hero: "/images/choker-branca-2.jpg",
@@ -42,11 +43,18 @@ export const PRODUCTS: Product[] = [
     id: "bolsa-canarinho",
     name: "Bolsa Canarinho",
     category: "Bolsa",
-    price: 289,
+    price: 290,
     eyebrow: "Edição limitada",
     tagline: "Carregue a seleção no ombro.",
-    hero: "/images/bolsa-canarinho-ensaio-01.jpg",
-    images: ["/images/bolsa-canarinho-ensaio-01.jpg", "/images/bolsa-canarinho-ensaio-02.jpg"],
+    hero: "/images/bolsa-canarinho-2.jpg",
+    heroPosition: "center 38%",
+    images: [
+      "/images/bolsa-canarinho-capa-hero.jpg",
+      "/images/bolsa-canarinho-1.jpg",
+      "/images/bolsa-canarinho-2.jpg",
+      "/images/bolsa-canarinho-4.jpg",
+      "/images/bolsa-canarinho-5.jpg",
+    ],
     blurb: "Cristais azul-fumê, miçangas amarelo-canarinho e um troféu dourado pra dar sorte. Cada bolsa é trançada à mão — não existem duas iguais.",
     details: "Miçangas de cristal e acrílico · alça de cordão trançado · ferragens e charm de troféu banhados a ouro · ~18 × 14 cm. Feita à mão no Brasil.",
     sizes: ["Único"],
