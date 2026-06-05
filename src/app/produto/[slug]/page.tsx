@@ -58,6 +58,11 @@ export default function ProductPage() {
 
   return (
     <div className="pdp-shell">
+      {/* ── Mobile topbar (hidden on desktop via CSS) ── */}
+      <div className="pdp-topbar">
+        <Link href="/" className="pdp-back">← Carnavei</Link>
+      </div>
+
       {/* ── Coluna esquerda ── */}
       <aside className="pdp-left">
         <Link href="/" className="pdp-back">
@@ -146,9 +151,19 @@ export default function ProductPage() {
 
       {/* ── Barra inferior ── */}
       <div className="pdp-details-bar">
+        {/* Desktop: scroll para seção de detalhes */}
         <button className="pdp-details-trigger" onClick={scrollToDetails}>
           Detalhes ↓
         </button>
+        {/* Mobile: botão Adicionar à sacola (details-trigger fica oculto) */}
+        <button className="pdp-add-btn pdp-details-cta" onClick={handleAdd}>
+          Adicionar à sacola
+        </button>
+        {added && (
+          <div className="pdp-added pdp-details-added">
+            <Check size={13} /> Adicionado
+          </div>
+        )}
       </div>
 
       {/* ── Lightbox ── */}

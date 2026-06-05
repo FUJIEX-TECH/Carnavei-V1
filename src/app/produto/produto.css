@@ -440,56 +440,127 @@
 }
 
 
+/* ── Mobile topbar (hidden on desktop) ───────────────────── */
+.pdp-topbar { display: none; }
+
+/* ── CTA elements in details bar (hidden on desktop) ─────── */
+.pdp-details-cta  { display: none; }
+.pdp-details-added { display: none !important; }
+
+
 /* ── Mobile ──────────────────────────────────────────────── */
 @media (max-width: 680px) {
+  /*
+   * Layout móvel: topbar fixa → galeria (flex) → info (scrollável) → CTA bar
+   * Grid: 44px | 1fr | minmax(0, 46svh) | auto
+   */
   .pdp-shell {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr 48px;
+    grid-template-rows: 44px 1fr minmax(0, 46svh) auto;
   }
 
-  .pdp-left {
+  /* ── Top bar com botão Voltar ── */
+  .pdp-topbar {
     grid-column: 1;
     grid-row: 1;
-    border-right: none;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    background: #f0efed;
     border-bottom: 1px solid rgba(0, 0, 0, 0.07);
-    padding: 24px 20px;
+    z-index: 5;
+    flex-shrink: 0;
   }
-  .pdp-back { margin-bottom: 24px; }
+  .pdp-topbar .pdp-back {
+    margin-bottom: 0;
+    font-size: 11px;
+  }
 
+  /* ── Galeria — row 2, full-bleed ── */
   .pdp-gallery {
     grid-column: 1;
     grid-row: 2;
-    padding: 24px 20px 60px;
+    padding: 0 0 12px;
+    gap: 3px;
+    overflow-y: scroll;
+  }
+  .pdp-gallery-item img {
+    border-radius: 0;
   }
 
-  .pdp-right { display: none; }
-
-  .pdp-details-bar {
+  /* ── Painel de info — row 3, altura limitada e scrollável ── */
+  .pdp-left {
     grid-column: 1;
     grid-row: 3;
+    border-right: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.07);
+    padding: 18px 16px 8px;
+    overflow-y: auto;
   }
 
+  /* Back link no painel de info oculto no mobile (topbar tem o link) */
+  .pdp-left .pdp-back        { display: none; }
+  /* Add button e shipping ficam no CTA bar no mobile */
+  .pdp-left .pdp-add-btn     { display: none; }
+  .pdp-left .pdp-added       { display: none; }
+  .pdp-left .pdp-shipping    { display: none; }
+
+  .pdp-name        { font-size: 1.35rem; margin-bottom: 10px; }
+  .pdp-price       { font-size: 1rem; }
+  .pdp-installment { margin-bottom: 20px; }
+
+  /* Touch targets maiores para botões de tamanho/qtde */
+  .pdp-size-btn {
+    height: 40px;
+    min-width: 44px;
+    font-size: 12px;
+  }
+
+  /* ── CTA bar — row 4 ── */
+  .pdp-details-bar {
+    grid-column: 1;
+    grid-row: 4;
+    height: auto;
+    padding: 10px 16px env(safe-area-inset-bottom, 10px);
+    flex-direction: column;
+    gap: 6px;
+  }
+  .pdp-details-trigger { display: none; }
+  .pdp-details-cta {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 0;
+    padding: 14px;
+    font-size: 13.5px;
+  }
+  .pdp-details-added {
+    display: flex !important;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+
+  /* ── Coluna direita (outros produtos) oculta ── */
+  .pdp-right { display: none; }
+
+  /* ── Seção editorial de detalhes ── */
   .pdp-info-grid {
     grid-template-columns: 1fr;
     gap: 0;
   }
-
   .pdp-info-col {
     padding-bottom: 32px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   }
-
   .pdp-info-col:last-child {
     border-bottom: none;
     padding-bottom: 0;
   }
-
   .pdp-info-rule--light {
     margin-top: 32px;
     margin-bottom: 32px;
   }
-
   .pdp-info-section {
-    padding: 56px 0 72px;
+    padding: 40px 0 56px;
   }
 }

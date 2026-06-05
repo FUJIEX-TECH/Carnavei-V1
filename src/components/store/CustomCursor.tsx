@@ -3,6 +3,9 @@ import { useEffect } from "react";
 
 export function CustomCursor() {
   useEffect(() => {
+    // Não monta o cursor em dispositivos touch (pointer: coarse)
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+
     const cursor = document.createElement("div");
     cursor.id = "custom-cursor";
     document.body.appendChild(cursor);

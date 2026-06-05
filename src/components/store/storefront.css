@@ -717,16 +717,16 @@
     background: linear-gradient(
       to top,
       rgba(20, 16, 24, .76) 0%,
-      rgba(20, 16, 24, .42) 35%,
-      rgba(20, 16, 24, 0)   65%
+      rgba(20, 16, 24, .44) 38%,
+      rgba(20, 16, 24, 0)   68%
     );
   }
 
-  /* Bloco de conteúdo — alinhado à esquerda, espaço para o chrome do rodapé */
+  /* Bloco de conteúdo — alinhado à esquerda, espaço para chrome do rodapé */
   .cv-snap-content {
     left: 20px;
     right: 20px;
-    bottom: 96px;
+    bottom: calc(96px + env(safe-area-inset-bottom, 0px));
     max-width: 100%;
     text-align: left;
     align-items: flex-start;
@@ -734,20 +734,47 @@
 
   .cv-snap-name { font-size: 2.2rem; }
 
+  /* CTA button — largura total para facilitar o toque */
+  .cv-snap-content .cv-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 22px;
+    font-size: 15px;
+  }
+
   /* Scroll hint — dispensável no mobile */
   .cv-scroll-hint { display: none; }
 
-  /* Counter — menos intrusivo, some com o conteúdo de rodapé */
+  /* Counter */
   .cv-snap-counter {
-    bottom: 72px;
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px));
     right: 20px;
   }
 
-  /* Chrome */
+  /* Chrome — safe-area-inset para iPhone com notch/Dynamic Island */
   .cv-top { left: 20px; top: 20px; }
-  .cv-top img { height: 48px; }
-  .cv-cart-btn { left: 20px; bottom: 32px; }
-  .cv-handle { bottom: 10px; }
+  .cv-top img { height: 40px; }
+
+  .cv-cart-btn {
+    left: 20px;
+    bottom: calc(32px + env(safe-area-inset-bottom, 0px));
+    /* Pill de fundo para área de toque mais generosa */
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13.5px;
+  }
+  .cv-cart-btn.on-dark {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .cv-cart-btn:not(.on-dark) {
+    background: rgba(43, 37, 48, 0.08);
+  }
+
+  .cv-handle {
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  }
 
   /* Grid section — scrollável para caber 5 produtos em 2 colunas */
   .cv-snap-section.cv-snap-grid {
@@ -759,7 +786,7 @@
     gap: 12px;
   }
   .cv-grid-inner {
-    padding: 80px 20px 48px;
+    padding: 80px 20px calc(48px + env(safe-area-inset-bottom, 0px));
     width: 100%;
   }
   .cv-grid-header { margin-bottom: 24px; }

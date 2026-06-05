@@ -154,9 +154,16 @@
   }
 }
 
-/* ── Custom cursor ─────────────────────────────────────────── */
-* { cursor: none !important; }
+/* ── Custom cursor — só em dispositivos com mouse (pointer: fine) ── */
+@media (pointer: fine) {
+  * { cursor: none !important; }
+}
 
+#custom-cursor {
+  display: none; /* escondido por padrão; ativado abaixo só com mouse */
+}
+
+@media (pointer: fine) {
 #custom-cursor {
   position: fixed;
   width: 34px;
@@ -196,3 +203,4 @@
   transform: translate(-50%, -50%) scale(1.4);
   opacity: 0.85;
 }
+} /* end @media (pointer: fine) */
