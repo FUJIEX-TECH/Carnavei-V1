@@ -448,6 +448,9 @@
 .pdp-details-added { display: none !important; }
 
 
+/* ── Dropdowns mobile (ocultos no desktop) ───────────────── */
+.pdp-selects-row { display: none; }
+
 /* ── Mobile ──────────────────────────────────────────────── */
 @media (max-width: 680px) {
   /*
@@ -456,7 +459,7 @@
    */
   .pdp-shell {
     grid-template-columns: 1fr;
-    grid-template-rows: 44px 1fr minmax(0, 46svh) auto;
+    grid-template-rows: 44px 1fr auto auto;
   }
 
   /* ── Top bar com botão Voltar ── */
@@ -504,6 +507,43 @@
   .pdp-left .pdp-add-btn     { display: none; }
   .pdp-left .pdp-added       { display: none; }
   .pdp-left .pdp-shipping    { display: none; }
+  /* Pills de tamanho e qtde substituídas por dropdowns no mobile */
+  .pdp-left .pdp-label       { display: none; }
+  .pdp-left .pdp-sizes       { display: none; }
+
+  /* ── Dropdowns lado a lado ── */
+  .pdp-selects-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+  .pdp-select-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .pdp-select-group .pdp-label {
+    display: block;
+  }
+  .pdp-select {
+    width: 100%;
+    height: 40px;
+    padding: 0 32px 0 12px;
+    border: 1px solid #D8D0C8;
+    border-radius: 999px;
+    background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239A9298' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+    -webkit-appearance: none;
+    appearance: none;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 12px;
+    color: #2B2530;
+    cursor: pointer;
+  }
+  .pdp-select:focus {
+    outline: none;
+    border-color: #2B2530;
+  }
 
   .pdp-name        { font-size: 1.35rem; margin-bottom: 10px; }
   .pdp-price       { font-size: 1rem; }
@@ -521,7 +561,7 @@
     grid-column: 1;
     grid-row: 4;
     height: auto;
-    padding: 10px 16px env(safe-area-inset-bottom, 10px);
+    padding: 10px 16px calc(env(safe-area-inset-bottom, 0px) + 8px);
     flex-direction: column;
     gap: 6px;
   }

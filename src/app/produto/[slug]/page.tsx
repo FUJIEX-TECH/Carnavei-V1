@@ -105,6 +105,38 @@ export default function ProductPage() {
           ))}
         </div>
 
+        {/* Mobile: dropdowns lado a lado (ocultos no desktop via CSS) */}
+        <div className="pdp-selects-row">
+          <div className="pdp-select-group">
+            <label className="pdp-label" htmlFor="pdp-select-size">Tamanho</label>
+            <select
+              id="pdp-select-size"
+              className="pdp-select"
+              value={size}
+              onChange={(e) => setSize(e.target.value)}
+            >
+              {product.sizes.map((s) => (
+                <option key={s} value={s} disabled={product.soldOutSizes.includes(s)}>
+                  {s}{product.soldOutSizes.includes(s) ? " (esgotado)" : ""}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="pdp-select-group">
+            <label className="pdp-label" htmlFor="pdp-select-qty">Quantidade</label>
+            <select
+              id="pdp-select-qty"
+              className="pdp-select"
+              value={qty}
+              onChange={(e) => setQty(Number(e.target.value))}
+            >
+              {[1, 2, 3, 4, 5].map((n) => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
         <button className="pdp-add-btn" onClick={handleAdd}>
           Adicionar à sacola
         </button>
