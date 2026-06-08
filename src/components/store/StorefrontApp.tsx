@@ -3,13 +3,14 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { X, ChevronDown } from "lucide-react";
 import Link from "next/link";
-import { PRODUCTS, BRL } from "@/lib/products";
+import { BRL } from "@/lib/products";
 import type { Product } from "@/lib/products";
 import "./storefront.css";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 type CartLine = { id: string; size: string; qty: number };
+type CartItem = { slug: string; size: string; qty: number };
 
 // ─── Cart Drawer ──────────────────────────────────────────────────────────────
 
@@ -74,12 +75,19 @@ function CartDrawer({
 
 // ─── App Root ─────────────────────────────────────────────────────────────────
 
-export function StorefrontApp() {
-  const products = PRODUCTS;
+export function StorefrontApp({
+  products,
+  initialCart = [],
+}: {
+  products: Product[];
+  initialCart?: CartItem[];
+}) {
   const heroProducts = products.filter(p => !p.heroExclude);
   const [activeIndex, setActiveIndex] = useState(0);
   const [cartOpen, setCartOpen] = useState(false);
-  const [cart, setCart] = useState<CartLine[]>([]);
+  const [cart, setCart] = useState<CartLine[]>(
+    initialCart.map((i) => ({ id: i.slug, size: i.size, qty: i.qty }))
+  );
 
   // Refs for each section (products + grid)
   const containerRef = useRef<HTMLDivElement>(null);
@@ -121,22 +129,30 @@ export function StorefrontApp() {
     allSections[idx]?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
-  // Cart helpers
-  const addToCart = (line: CartLine) => {
+  // Cart helpers — otimistas: atualiza UI imediatamente, persiste em background
+  const cycleQty = (i: number) => {
     setCart((prev) => {
-      const i = prev.findIndex(x => x.id === line.id && x.size === line.size);
-      if (i >= 0) {
-        const n = [...prev];
-        n[i] = { ...n[i], qty: n[i].qty + line.qty };
-        return n;
-      }
-      return [...prev, line];
+      const next = prev.map((l, j) => j === i ? { ...l, qty: (l.qty % 5) + 1 } : l);
+      const line = next[i];
+      fetch("/api/cart", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: line.id, size: line.size, qty: line.qty }),
+      });
+      return next;
     });
   };
-  const cycleQty = (i: number) =>
-    setCart((prev) => prev.map((l, j) => j === i ? { ...l, qty: (l.qty % 5) + 1 } : l));
-  const removeLine = (i: number) =>
-    setCart((prev) => prev.filter((_, j) => j !== i));
+  const removeLine = (i: number) => {
+    setCart((prev) => {
+      const line = prev[i];
+      fetch("/api/cart", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: line.id, size: line.size }),
+      });
+      return prev.filter((_, j) => j !== i);
+    });
+  };
 
   const count = cart.reduce((s, l) => s + l.qty, 0);
   const dark = activeIndex < heroProducts.length;

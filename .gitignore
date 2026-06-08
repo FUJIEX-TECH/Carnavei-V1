@@ -2,6 +2,10 @@
 
 # dependencies
 /node_modules
+# node_modules/.next movidos para .nosync (fora da sincronização do iCloud) — ver tarefas.md
+/*.nosync
+/node_modules.nosync
+/.next.nosync
 /.pnp
 .pnp.*
 .yarn/*
@@ -14,6 +18,7 @@
 /coverage
 
 # next.js
+/.next
 /.next/
 /out/
 

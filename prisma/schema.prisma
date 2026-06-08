@@ -4,9 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
 // ─── Auth ────────────────────────────────────────────────────────────────────
@@ -75,14 +73,23 @@ enum Role {
 // ─── Catálogo ────────────────────────────────────────────────────────────────
 
 model Product {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  description String?
-  images      String[] // array de URLs
-  status      ProductStatus @default(DRAFT)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String        @id @default(cuid())
+  name         String
+  slug         String        @unique
+  category     String        @default("")
+  description  String?
+  eyebrow      String?
+  tagline      String?
+  blurb        String?
+  details      String?
+  hero         String?
+  heroPosition String?
+  heroExclude  Boolean       @default(false)
+  thumbnail    String?
+  images       String[]
+  status       ProductStatus @default(DRAFT)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   attributes ProductAttribute[]
   variants   ProductVariant[]
