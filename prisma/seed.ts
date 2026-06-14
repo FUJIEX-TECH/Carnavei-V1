@@ -31,7 +31,7 @@ const products = [
     ],
     price: 6000,
     sizes: ["Ajustável"],
-    weight: 30, width: 10, height: 2, length: 8,
+    weight: 300, width: 12, height: 2, length: 17,
   },
   {
     slug: "bolsa-canarinho",
@@ -53,7 +53,7 @@ const products = [
     ],
     price: 29000,
     sizes: ["Único"],
-    weight: 200, width: 20, height: 14, length: 5,
+    weight: 500, width: 12, height: 2, length: 17,
   },
   {
     slug: "charm-chain",
@@ -75,7 +75,7 @@ const products = [
     ],
     price: 4000,
     sizes: ["Único"],
-    weight: 20, width: 10, height: 2, length: 8,
+    weight: 300, width: 12, height: 2, length: 17,
   },
   {
     slug: "choker-bandeira",
@@ -90,7 +90,7 @@ const products = [
     images: ["/images/choker-ensaio-01.jpg"],
     price: 6000,
     sizes: ["Ajustável"],
-    weight: 30, width: 10, height: 2, length: 8,
+    weight: 300, width: 12, height: 2, length: 17,
   },
   {
     slug: "colar-selecao",
@@ -105,7 +105,7 @@ const products = [
     images: ["/images/hero-1.jpg"],
     price: 5000,
     sizes: ["42 cm", "50 cm"],
-    weight: 25, width: 10, height: 2, length: 8,
+    weight: 300, width: 12, height: 2, length: 17,
   },
 ];
 

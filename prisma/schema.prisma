@@ -148,8 +148,9 @@ enum ProductStatus {
 model Order {
   id                 String      @id @default(cuid())
   status             OrderStatus @default(PENDING)
-  pagSeguroOrderId   String?
-  paymentMethod      String?     // "CREDIT_CARD" | "BOLETO" | "PIX"
+  pagSeguroOrderId   String?     // legado — não usado (gateway é Mercado Pago)
+  mercadoPagoPaymentId String?   @unique // ID do pagamento no Mercado Pago — garante idempotência do webhook
+  paymentMethod      String?     // "credit_card" | "ticket" (boleto) | "pix" — payment_type_id do MP
   subtotal           Int         // centavos
   discountAmount     Int         @default(0)
   shippingPrice      Int         @default(0)

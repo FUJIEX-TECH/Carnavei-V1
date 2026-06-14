@@ -29,11 +29,20 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   const session = await getSession();
-  const { slug, size } = (await req.json()) as { slug: string; size: string };
+  const body = (await req.json().catch(() => ({}))) as {
+    slug?: string;
+    size?: string;
+    all?: boolean;
+  };
 
-  session.cart = (session.cart ?? []).filter(
-    (i) => !(i.slug === slug && i.size === size)
-  );
+  // Sem slug ou com `all: true` → esvazia o carrinho inteiro (pós-pagamento)
+  if (body.all || !body.slug) {
+    session.cart = [];
+  } else {
+    session.cart = (session.cart ?? []).filter(
+      (i) => !(i.slug === body.slug && i.size === body.size)
+    );
+  }
   await session.save();
   return NextResponse.json(session.cart);
 }
