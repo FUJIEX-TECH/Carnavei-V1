@@ -53,6 +53,40 @@ export default function RegisterForm() {
           />
         </div>
         <div>
+          <label className="block text-xs font-medium text-[var(--ink-soft)] mb-1">WhatsApp</label>
+          <div className="flex gap-2">
+            <input
+              name="ddi"
+              type="text"
+              inputMode="tel"
+              defaultValue="+55"
+              aria-label="DDI"
+              className="w-14 px-2 py-2.5 text-sm text-center border border-[var(--line)] rounded-xl bg-white text-[var(--ink)] focus:outline-none focus:ring-2 focus:ring-[var(--terracotta)]/30 focus:border-[var(--terracotta)]/60 transition"
+            />
+            <input
+              name="ddd"
+              type="text"
+              inputMode="numeric"
+              maxLength={2}
+              required
+              placeholder="DDD"
+              aria-label="DDD"
+              className="w-16 px-2 py-2.5 text-sm text-center border border-[var(--line)] rounded-xl bg-white text-[var(--ink)] placeholder:text-[var(--ink-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--terracotta)]/30 focus:border-[var(--terracotta)]/60 transition"
+            />
+            <input
+              name="phone"
+              type="text"
+              inputMode="numeric"
+              maxLength={9}
+              required
+              placeholder="99999-9999"
+              aria-label="Número do WhatsApp"
+              className="flex-1 px-4 py-2.5 text-sm border border-[var(--line)] rounded-xl bg-white text-[var(--ink)] placeholder:text-[var(--ink-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--terracotta)]/30 focus:border-[var(--terracotta)]/60 transition"
+            />
+          </div>
+          <p className="text-[11px] text-[var(--ink-faint)] mt-1">Ex: +55 · 11 · 9 dígitos</p>
+        </div>
+        <div>
           <label className="block text-xs font-medium text-[var(--ink-soft)] mb-1">Senha</label>
           <input
             name="password"

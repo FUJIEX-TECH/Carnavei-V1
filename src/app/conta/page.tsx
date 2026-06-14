@@ -37,7 +37,7 @@ export default async function ContaPage() {
       <header className="border-b border-[var(--line)] bg-white">
         <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link href="/">
-            <Image src="/carnavei-wordmark.svg" alt="Carnavei" width={110} height={28} className="h-7 w-auto" priority />
+            <Image src="/carnavei-wordmark-color.svg" alt="Carnavei" width={110} height={28} className="h-7 w-auto" priority />
           </Link>
           <form
             action={async () => {

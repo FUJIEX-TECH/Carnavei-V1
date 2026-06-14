@@ -14,7 +14,7 @@ export default async function RegistroPage() {
     <div className="min-h-screen bg-[var(--paper)] flex flex-col items-center justify-center px-6 text-center">
       <Link href="/" className="mb-10">
         <Image
-          src="/carnavei-wordmark.svg"
+          src="/carnavei-wordmark-color.svg"
           alt="Carnavei"
           width={140}
           height={36}

@@ -16,6 +16,7 @@ model User {
   emailVerified DateTime?
   image         String?
   password      String?
+  phone         String?   // WhatsApp em E.164, ex: +5511999999999
   role          Role      @default(CUSTOMER)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

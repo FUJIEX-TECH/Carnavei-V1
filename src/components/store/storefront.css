@@ -383,28 +383,22 @@
   text-decoration: none;
 }
 .cv-account-text {
-  position: relative;
   font-family: var(--font-body);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.02em;
-  color: var(--ink);
-  padding-bottom: 2px;
+  color: #fff;
+  background: rgba(212, 100, 41, 0.92); /* terracota com opacidade */
+  padding: 9px 20px;
+  border-radius: 999px;
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  transition: background 0.25s var(--ease-out), transform 0.25s var(--ease-out);
 }
-.cv-account-text::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s var(--ease-out);
+.cv-account:hover .cv-account-text {
+  background: var(--terracotta); /* sólido no hover */
+  transform: translateY(-1px);
 }
-.cv-account:hover .cv-account-text::after { transform: scaleX(1); }
-.cv-account.on-dark .cv-account-text { color: rgba(255,255,255,.9); }
 
 .cv-account-avatar {
   width: 32px;
@@ -857,7 +851,7 @@
     opacity: 0;
     pointer-events: none;
   }
-  .cv-account-text { font-size: 13.5px; }
+  .cv-account-text { font-size: 13px; padding: 8px 16px; }
   .cv-account-avatar,
   .cv-account-initial { width: 30px; height: 30px; }
   .cv-account-initial { font-size: 13px; }
