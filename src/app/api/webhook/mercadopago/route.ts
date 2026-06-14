@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { mpPayment } from "@/lib/mercadopago";
 import { db } from "@/lib/db";
+import { sendOrderConfirmationEmail, sendAdminOrderEmail } from "@/lib/email";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -59,8 +60,9 @@ export async function POST(req: Request) {
 
   const shippingCents = Math.round(meta.shipping.price * 100);
 
+  let order;
   try {
-    await db.order.create({
+    order = await db.order.create({
     data: {
       status: "PAID",
       mercadoPagoPaymentId: mpPaymentId,
@@ -103,6 +105,43 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true });
     }
     throw err;
+  }
+
+  // E-mails de confirmação (cliente + admin). Falha de envio não derruba o
+  // webhook — o pedido já está pago e registrado.
+  try {
+    const emailData = {
+      customerName: meta.address.name,
+      customerEmail: meta.address.email,
+      items: meta.cart.map((ci) => {
+        const p = products.find((p) => p.slug === ci.slug);
+        return {
+          name: p?.name ?? ci.slug,
+          qty: ci.qty,
+          unitPrice: p?.variants[0]?.price ?? 0,
+        };
+      }),
+      subtotal,
+      shippingPrice: shippingCents,
+      total: subtotal + shippingCents,
+      shippingService: meta.shipping.name,
+      address: {
+        street: meta.address.street,
+        number: meta.address.number,
+        complement: meta.address.complement,
+        district: meta.address.district,
+        city: meta.address.city,
+        state: meta.address.state,
+        cep: meta.address.cep,
+      },
+      orderRef: order.id.slice(-6).toUpperCase(),
+    };
+    await Promise.all([
+      sendOrderConfirmationEmail(emailData),
+      sendAdminOrderEmail(emailData),
+    ]);
+  } catch (err) {
+    console.error("[order-email]", err);
   }
 
   return NextResponse.json({ ok: true });

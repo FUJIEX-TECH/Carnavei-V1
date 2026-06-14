@@ -58,6 +58,12 @@ export default function LoginForm() {
           <p className="text-xs text-red-600">{state.error}</p>
         )}
 
+        <div className="text-right">
+          <Link href="/esqueci-senha" className="text-xs text-[var(--ink-soft)] hover:text-[var(--terracotta)] underline underline-offset-2">
+            Esqueci minha senha
+          </Link>
+        </div>
+
         <button
           type="submit"
           disabled={pending}
