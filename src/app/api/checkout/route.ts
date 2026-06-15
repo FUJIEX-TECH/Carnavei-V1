@@ -88,7 +88,8 @@ export async function POST(req: Request) {
         },
       },
       shipments: {
-        cost: shipping.price,
+        // Sem `cost` aqui: o frete já entra como item (acima). Ter os dois
+        // cobrava o frete em dobro. Mantemos só o endereço de entrega.
         mode: "not_specified",
         receiver_address: {
           zip_code: address.cep,
