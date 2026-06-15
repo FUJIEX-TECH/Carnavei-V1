@@ -65,7 +65,8 @@ function CartDrawer({
               <span>Subtotal ({count} {count === 1 ? "item" : "itens"})</span>
               <b>{BRL(subtotal)}</b>
             </div>
-            <button className="cv-btn cv-btn-primary cv-btn-block">Finalizar compra</button>
+            <Link href="/checkout" className="cv-btn cv-btn-primary cv-btn-block" onClick={onClose}>Finalizar compra</Link>
+            <button className="cv-btn cv-btn-ghost cv-btn-block" onClick={onClose}>Continuar comprando</button>
           </div>
         )}
       </aside>

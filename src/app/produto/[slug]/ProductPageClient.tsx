@@ -6,6 +6,7 @@ import Link from "next/link";
 import { BRL } from "@/lib/products";
 import type { Product } from "@/lib/products";
 import { ProductDetailsSection } from "@/components/store/ProductDetailsSection";
+import { CartDrawer } from "@/components/store/CartDrawer";
 import "../produto.css";
 
 export function ProductPageClient({
@@ -18,6 +19,8 @@ export function ProductPageClient({
   const [size, setSize] = useState(product.sizes[0] ?? "");
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cartReload, setCartReload] = useState(0);
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
   const [slideIdx, setSlideIdx] = useState(0);
   const detailsRef = useRef<HTMLElement>(null);
@@ -110,14 +113,17 @@ export function ProductPageClient({
     };
   }, []);
 
-  const handleAdd = () => {
-    fetch("/api/cart", {
+  const handleAdd = async () => {
+    await fetch("/api/cart", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ slug: product.id, size, qty }),
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 2400);
+    // Abre a sacola e recarrega seus itens — feedback claro pós-adição
+    setCartReload((k) => k + 1);
+    setCartOpen(true);
   };
 
   return (
@@ -321,6 +327,9 @@ export function ProductPageClient({
           </button>
         </div>
       )}
+
+      {/* Sacola — abre ao adicionar um produto */}
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} reloadKey={cartReload} />
     </div>
   );
 }

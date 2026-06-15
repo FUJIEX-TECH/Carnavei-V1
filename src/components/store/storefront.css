@@ -469,6 +469,12 @@
 .cv-btn-disabled { background: #ECE5DC; color: #B4ABA0; cursor: default; }
 .cv-btn-disabled:active { transform: none; }
 .cv-btn-block { display: flex; width: 100%; justify-content: center; }
+.cv-btn-ghost { background: transparent; color: var(--ink); }
+.cv-btn-ghost:hover { background: rgba(43, 37, 48, .06); }
+
+/* Drawer da sacola usado fora do .cv-shell (ex: página de produto): fixo no viewport */
+.cv-cart-backdrop.cv-fixed { position: fixed; }
+.cv-cart.cv-fixed { position: fixed; }
 
 /* ── PDP drawer (slides from right) ───────────────────────── */
 .cv-pdp-backdrop {
