@@ -67,12 +67,18 @@ export async function POST(req: Request) {
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
 
+  // Em sandbox, o Mercado Pago rejeita pagador com e-mail real ("uma das partes
+  // é de teste"). Quando MP_TEST_BUYER_EMAIL está definido (ambiente de teste),
+  // usamos o e-mail do usuário de teste comprador. O e-mail real do cliente
+  // continua no metadata.address (pedido + e-mails). Em produção a env não existe.
+  const payerEmail = process.env.MP_TEST_BUYER_EMAIL || address.email;
+
   const preference = await mpPreference.create({
     body: {
       items,
       payer: {
         name: address.name,
-        email: address.email,
+        email: payerEmail,
         identification: { type: "CPF", number: address.cpf },
         phone: { number: address.phone },
         address: {
