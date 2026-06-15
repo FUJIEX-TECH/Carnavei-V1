@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { mpPreference } from "@/lib/mercadopago";
 import { getSession } from "@/lib/session";
 import { db } from "@/lib/db";
+import { validatePromo } from "@/lib/promo";
 
 type CheckoutBody = {
   shipping: {
@@ -24,6 +25,7 @@ type CheckoutBody = {
     city: string;
     state: string;
   };
+  promoCode?: string | null;
 };
 
 export async function POST(req: Request) {
@@ -35,7 +37,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Carrinho vazio" }, { status: 400 });
   }
 
-  const { shipping, address } = (await req.json()) as CheckoutBody;
+  const { shipping, address, promoCode } = (await req.json()) as CheckoutBody;
 
   // Busca produtos do banco para montar os items da preferência
   const slugs = cart.map((i) => i.slug);
@@ -56,7 +58,25 @@ export async function POST(req: Request) {
     };
   });
 
-  // Item de frete
+  // Cupom: re-valida no servidor (nunca confiar no cliente) e aplica o desconto
+  // sobre o subtotal de PRODUTOS (não no frete), reduzindo os unit_price
+  // proporcionalmente. discountCents é guardado no metadata para o webhook.
+  const subtotalProdutosCents = items.reduce(
+    (s, it) => s + Math.round(it.unit_price * 100) * it.quantity,
+    0
+  );
+  // chaves lowercase no metadata (o MP converte camelCase → snake_case)
+  let appliedPromo: { code: string; discount: number } | null = null;
+  if (promoCode) {
+    const result = await validatePromo(promoCode, subtotalProdutosCents);
+    if (result.ok && result.discountCents > 0) {
+      appliedPromo = { code: result.code, discount: result.discountCents };
+      const fator = (subtotalProdutosCents - result.discountCents) / subtotalProdutosCents;
+      for (const it of items) it.unit_price = Math.round(it.unit_price * fator * 100) / 100;
+    }
+  }
+
+  // Item de frete (sem desconto)
   items.push({
     id: `frete-${shipping.id}`,
     title: `Frete ${shipping.name} (${shipping.company})`,
@@ -122,6 +142,7 @@ export async function POST(req: Request) {
         cart: cart,
         address: address,
         shipping: shipping,
+        promo: appliedPromo,
       },
     },
   });

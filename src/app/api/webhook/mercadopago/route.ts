@@ -72,11 +72,15 @@ export async function POST(req: Request) {
       district: string; city: string; state: string;
     };
     shipping: { id: number; name: string; price: number; days: number; company: string };
+    promo?: { code: string; discount: number } | null;
   };
 
   if (!meta?.cart?.length) {
     return NextResponse.json({ ok: true });
   }
+
+  const discountCents = meta.promo?.discount ?? 0;
+  const promoCodeUsed = meta.promo?.code ?? null;
 
   // Busca variantes para montar os order items
   const slugs = meta.cart.map((i) => i.slug);
@@ -127,8 +131,10 @@ export async function POST(req: Request) {
       mercadoPagoPaymentId: mpPaymentId,
       paymentMethod: String((payment as unknown as Record<string, unknown>)["payment_type_id"] ?? "unknown"),
       subtotal,
+      discountAmount: discountCents,
+      promoCodeUsed,
       shippingPrice: shippingCents,
-      total: subtotal + shippingCents,
+      total: subtotal - discountCents + shippingCents,
       customerName: meta.address.name,
       customerEmail: meta.address.email,
       customerDocument: meta.address.cpf,
@@ -164,6 +170,13 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true });
     }
     throw err;
+  }
+
+  // Conta o uso do cupom (só após o pedido ser criado com sucesso)
+  if (promoCodeUsed) {
+    await db.promoCode
+      .update({ where: { code: promoCodeUsed }, data: { usedCount: { increment: 1 } } })
+      .catch((err) => console.error("[promo-increment]", err));
   }
 
   // E-mails de confirmação (cliente + admin). Falha de envio não derruba o

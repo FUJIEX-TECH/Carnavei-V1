@@ -79,6 +79,7 @@ export default function CheckoutPage() {
   const [selectedShipping, setSelectedShipping] = useState<ShippingOption | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [step, setStep] = useState<"address" | "shipping" | "payment">("address");
+  const [promoCode, setPromoCode] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/cart")
@@ -144,7 +145,7 @@ export default function CheckoutPage() {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ shipping: selectedShipping, address: addr }),
+        body: JSON.stringify({ shipping: selectedShipping, address: addr, promoCode }),
       });
       const data = await res.json();
       // Usa init_point (não sandbox_init_point): com credenciais de teste no
@@ -314,7 +315,7 @@ export default function CheckoutPage() {
         </div>
 
         {/* Coluna direita — resumo */}
-        <OrderSummary cart={cart} shipping={selectedShipping} />
+        <OrderSummary cart={cart} shipping={selectedShipping} onPromoChange={setPromoCode} />
       </main>
     </div>
   );
@@ -374,8 +375,20 @@ function Field({
   );
 }
 
-function OrderSummary({ cart, shipping }: { cart: CartItem[]; shipping: ShippingOption | null }) {
+type AppliedPromo = { code: string; discountCents: number; label: string };
+
+function OrderSummary({
+  cart, shipping, onPromoChange,
+}: {
+  cart: CartItem[];
+  shipping: ShippingOption | null;
+  onPromoChange: (code: string | null) => void;
+}) {
   const [products, setProducts] = useState<Array<{ slug: string; name: string; price: number; thumbnail?: string }>>([]);
+  const [promoInput, setPromoInput] = useState("");
+  const [promo, setPromo] = useState<AppliedPromo | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [promoLoading, setPromoLoading] = useState(false);
 
   useEffect(() => {
     if (cart.length === 0) return;
@@ -391,8 +404,41 @@ function OrderSummary({ cart, shipping }: { cart: CartItem[]; shipping: Shipping
     return sum + (p?.price ?? 0) * item.qty;
   }, 0);
 
+  async function applyPromo() {
+    setPromoError(null);
+    setPromoLoading(true);
+    try {
+      const res = await fetch("/api/promo/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: promoInput, subtotal: Math.round(itemsTotal * 100) }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        const applied = { code: data.code, discountCents: data.discountCents, label: data.label };
+        setPromo(applied);
+        onPromoChange(applied.code);
+        setPromoError(null);
+      } else {
+        setPromo(null);
+        onPromoChange(null);
+        setPromoError(data.error ?? "Cupom inválido.");
+      }
+    } finally {
+      setPromoLoading(false);
+    }
+  }
+
+  function removePromo() {
+    setPromo(null);
+    setPromoInput("");
+    setPromoError(null);
+    onPromoChange(null);
+  }
+
   const shippingPrice = shipping?.price ?? 0;
-  const total = itemsTotal + shippingPrice;
+  const discount = promo ? promo.discountCents / 100 : 0;
+  const total = Math.max(0, itemsTotal + shippingPrice - discount);
 
   return (
     <aside className="rounded-2xl border border-border bg-white p-6 h-fit sticky top-24 space-y-5">
@@ -416,9 +462,54 @@ function OrderSummary({ cart, shipping }: { cart: CartItem[]; shipping: Shipping
         </ul>
       )}
 
+      {/* Cupom */}
+      {cart.length > 0 && (
+        <div className="border-t border-border pt-4">
+          {promo ? (
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-[var(--terracotta)] font-semibold">
+                Cupom {promo.code} · {promo.label}
+              </span>
+              <button onClick={removePromo} className="text-xs text-[var(--ink-faint)] underline">remover</button>
+            </div>
+          ) : (
+            <div>
+              <div className="flex gap-2">
+                <input
+                  value={promoInput}
+                  onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
+                  placeholder="Cupom de desconto"
+                  className="flex-1 px-3 py-2 text-sm border border-border rounded-xl bg-[var(--paper)] text-[var(--ink)] placeholder:text-[var(--ink-faint)] focus:outline-none focus:ring-2 focus:ring-[var(--terracotta)]/30 transition uppercase"
+                />
+                <button
+                  onClick={applyPromo}
+                  disabled={promoLoading || !promoInput.trim()}
+                  className="px-4 py-2 text-sm font-semibold rounded-xl border border-[var(--terracotta)] text-[var(--terracotta)] disabled:opacity-40 hover:bg-[var(--blush)]/30 transition-colors"
+                >
+                  {promoLoading ? "..." : "Aplicar"}
+                </button>
+              </div>
+              {promoError && <p className="text-xs text-red-600 mt-1.5">{promoError}</p>}
+            </div>
+          )}
+        </div>
+      )}
+
       <hr className="border-border" />
 
       <div className="space-y-2 text-sm">
+        {itemsTotal > 0 && (
+          <div className="flex justify-between text-[var(--ink-soft)]">
+            <span>Subtotal</span>
+            <span>R$ {itemsTotal.toFixed(2).replace(".", ",")}</span>
+          </div>
+        )}
+        {promo && (
+          <div className="flex justify-between text-[var(--terracotta)]">
+            <span>Desconto ({promo.code})</span>
+            <span>− R$ {discount.toFixed(2).replace(".", ",")}</span>
+          </div>
+        )}
         {shipping && (
           <div className="flex justify-between text-[var(--ink-soft)]">
             <span>Frete ({shipping.name})</span>
@@ -426,7 +517,7 @@ function OrderSummary({ cart, shipping }: { cart: CartItem[]; shipping: Shipping
           </div>
         )}
         {total > 0 && (
-          <div className="flex justify-between font-bold text-[var(--ink)]">
+          <div className="flex justify-between font-bold text-[var(--ink)] pt-1">
             <span>Total</span>
             <span>R$ {total.toFixed(2).replace(".", ",")}</span>
           </div>
