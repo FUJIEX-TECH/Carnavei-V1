@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Check, X, ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import Link from "next/link";
-import { BRL } from "@/lib/products";
+import { BRL, maxInstallments } from "@/lib/products";
 import type { Product } from "@/lib/products";
 import { ProductDetailsSection } from "@/components/store/ProductDetailsSection";
 import { CartDrawer } from "@/components/store/CartDrawer";
@@ -169,9 +169,9 @@ export function ProductPageClient({
           </button>
         </div>
         <h1 className="pdp-name">{product.name}</h1>
-        <p className="pdp-price">{BRL(product.price)}</p>
+        <p className="pdp-price">{BRL(product.price)} <span className="pdp-price-pix">no Pix</span></p>
         <p className="pdp-installment">
-          ou 3× {BRL(Math.ceil(product.price / 3))} sem juros
+          ou até {maxInstallments(product.price)}× no cartão
         </p>
 
         <p className="pdp-label">Tamanho</p>

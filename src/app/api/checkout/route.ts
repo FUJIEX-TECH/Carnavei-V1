@@ -65,6 +65,11 @@ export async function POST(req: Request) {
     currency_id: "BRL",
   });
 
+  // Parcelas máximas por faixa de valor (juros por conta do cliente, cobrados
+  // pelo Mercado Pago): até R$300 → 4x; acima → 10x. O Pix segue à vista.
+  const totalAmount = items.reduce((s, it) => s + it.unit_price * it.quantity, 0);
+  const maxInstallments = totalAmount <= 300 ? 4 : 10;
+
   const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
 
   // Em sandbox (MP_TEST_BUYER_EMAIL definido) NÃO enviamos o pagador: passar
@@ -91,6 +96,9 @@ export async function POST(req: Request) {
     body: {
       items,
       ...(payer ? { payer } : {}),
+      payment_methods: {
+        installments: maxInstallments, // máximo de parcelas no cartão
+      },
       shipments: {
         // Sem `cost` aqui: o frete já entra como item (acima). Ter os dois
         // cobrava o frete em dobro. Mantemos só o endereço de entrega.

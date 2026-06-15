@@ -74,6 +74,12 @@
   color: #2B2530;
   margin-bottom: 4px;
 }
+.pdp-price-pix {
+  font-size: 11px;
+  font-weight: 500;
+  color: #D46429;
+  letter-spacing: 0.02em;
+}
 
 .pdp-installment {
   font-size: 11px;

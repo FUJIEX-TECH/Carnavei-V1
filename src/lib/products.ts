@@ -19,6 +19,11 @@ export type Product = {
 export const BRL = (n: number) =>
   new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(n);
 
+// Máximo de parcelas no cartão por faixa de valor (em reais). Juros por conta
+// do cliente (cobrados pelo Mercado Pago). Deve casar com a regra no checkout.
+export const maxInstallments = (priceReais: number): number =>
+  priceReais <= 300 ? 4 : 10;
+
 export const PRODUCTS: Product[] = [
   {
     id: "choker-branca",
