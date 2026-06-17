@@ -7,6 +7,19 @@ datasource db {
   provider = "postgresql"
 }
 
+// Tokens OAuth de integrações que expiram (ex: Melhor Envio, ~30 dias).
+// Guardar no banco permite renovar automaticamente via refresh_token, sem
+// depender de env vars fixas (que não dá pra atualizar em runtime).
+model IntegrationToken {
+  provider     String   @id // ex: "melhor_envio"
+  accessToken  String
+  refreshToken String
+  expiresAt    DateTime
+  updatedAt    DateTime @updatedAt
+
+  @@map("integration_tokens")
+}
+
 // ─── Auth ────────────────────────────────────────────────────────────────────
 
 model User {

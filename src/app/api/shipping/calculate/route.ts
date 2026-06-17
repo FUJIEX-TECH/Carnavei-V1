@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { getMelhorEnvioToken, ME_BASE as ME_ROOT } from "@/lib/melhor-envio";
 
-const ME_BASE =
-  process.env.MELHOR_ENVIO_ENV === "sandbox"
-    ? "https://sandbox.melhorenvio.com.br/api/v2"
-    : "https://melhorenvio.com.br/api/v2";
+const ME_BASE = `${ME_ROOT}/api/v2`;
 
 type RequestBody = {
   cep: string;
@@ -47,11 +45,12 @@ export async function POST(req: Request) {
 
   const fromCep = process.env.MELHOR_ENVIO_FROM_CEP!.replace(/\D/g, "");
   const toCep = cep.replace(/\D/g, "");
+  const meToken = await getMelhorEnvioToken();
 
   const res = await fetch(`${ME_BASE}/me/shipment/calculate`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${process.env.MELHOR_ENVIO_TOKEN}`,
+      Authorization: `Bearer ${meToken}`,
       "Content-Type": "application/json",
       Accept: "application/json",
       "User-Agent": "Carnavei (fernando.fujie@gmail.com)",
