@@ -248,8 +248,6 @@ export function ProductPageClient({
         )}
 
         <p className="pdp-shipping">
-          Frete grátis acima de R$ 250
-          <br />
           Entrega em todo o Brasil
         </p>
       </aside>

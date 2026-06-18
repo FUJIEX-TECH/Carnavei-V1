@@ -113,7 +113,7 @@ export function PDPDrawer({
   const accs = [
     { id: "desc", label: "Descrição", body: p.blurb },
     { id: "spec", label: "Detalhes do produto", body: p.details },
-    { id: "ship", label: "Envio", body: "Brasil R$ 19,90 — grátis acima de R$ 250. Cada peça é única; pequenas variações são parte do encanto." },
+    { id: "ship", label: "Envio", body: "Entregamos para todo o Brasil. Frete calculado no checkout. Cada peça é única; pequenas variações são parte do encanto." },
   ];
 
   return (

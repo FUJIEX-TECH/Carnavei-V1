@@ -5,7 +5,7 @@ import type { Product } from "@/lib/products";
 
 const SHIPPING_ITEMS = [
   "Entrega em todo o Brasil",
-  "Frete R$ 19,90 · grátis acima de R$ 250",
+  "Frete calculado no checkout",
   "Cada peça é única — pequenas variações fazem parte do encanto",
   "Prazo estimado: 5–12 dias úteis após envio",
 ];

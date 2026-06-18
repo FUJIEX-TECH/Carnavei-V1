@@ -124,7 +124,7 @@ export const PRODUCTS: Product[] = [
       "/images/colar-brasil-micanga-bandeira-produto-detalhe.jpg",
     ],
     blurb: "Miçangas seed bead verde e amarelo tecidas à mão, com pingente que reproduz a bandeira do Brasil ponto a ponto. Fecho lagosta e corrente de extensão dourados. Pra quem vai ao jogo ou assiste na arquibancada de casa — e quer chegar toda produzida.",
-    details: "Miçangas de vidro seed bead · pingente bandeira tecido à mão · fecho lagosta e corrente de extensão banhados a ouro · comprimento ajustável 42–50 cm",
+    details: "Miçangas de vidro seed bead · pingente bandeira tecido à mão · fecho lagosta e corrente de extensão banhados a ouro",
     sizes: ["Único"],
     soldOutSizes: [],
   },
