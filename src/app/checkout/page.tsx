@@ -1,6 +1,12 @@
 "use client";
 
 import { type ReactNode, useEffect, useState } from "react";
+
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void;
+  }
+}
 import Image from "next/image";
 import Link from "next/link";
 import { Loader2, ChevronDown, ChevronUp, Truck, Check } from "lucide-react";
@@ -80,6 +86,7 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [step, setStep] = useState<"address" | "shipping" | "payment">("address");
   const [promoCode, setPromoCode] = useState<string | null>(null);
+  const [orderTotal, setOrderTotal] = useState(0);
 
   useEffect(() => {
     fetch("/api/cart")
@@ -141,6 +148,15 @@ export default function CheckoutPage() {
   async function handleCheckout() {
     if (!selectedShipping) return;
     setSubmitting(true);
+
+    if (typeof window !== "undefined" && typeof window.fbq === "function") {
+      window.fbq("track", "InitiateCheckout", {
+        currency: "BRL",
+        value: orderTotal,
+        num_items: cart.reduce((s, i) => s + i.qty, 0),
+      });
+    }
+
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
@@ -153,7 +169,11 @@ export default function CheckoutPage() {
       // O init_point abre o checkout correto — de teste, porque as credenciais
       // que criaram a preferência são de teste.
       const url = data.initPoint ?? data.sandboxInitPoint;
-      if (url) window.location.href = url;
+      if (url) {
+        sessionStorage.setItem("mp_order_total", String(orderTotal));
+        sessionStorage.setItem("mp_order_items", String(cart.reduce((s, i) => s + i.qty, 0)));
+        window.location.href = url;
+      }
     } catch {
       setSubmitting(false);
     }
@@ -315,7 +335,7 @@ export default function CheckoutPage() {
         </div>
 
         {/* Coluna direita — resumo */}
-        <OrderSummary cart={cart} shipping={selectedShipping} onPromoChange={setPromoCode} />
+        <OrderSummary cart={cart} shipping={selectedShipping} onPromoChange={setPromoCode} onTotalChange={setOrderTotal} />
       </main>
     </div>
   );
@@ -378,11 +398,12 @@ function Field({
 type AppliedPromo = { code: string; discountCents: number; label: string };
 
 function OrderSummary({
-  cart, shipping, onPromoChange,
+  cart, shipping, onPromoChange, onTotalChange,
 }: {
   cart: CartItem[];
   shipping: ShippingOption | null;
   onPromoChange: (code: string | null) => void;
+  onTotalChange: (total: number) => void;
 }) {
   const [products, setProducts] = useState<Array<{ slug: string; name: string; price: number; thumbnail?: string }>>([]);
   const [promoInput, setPromoInput] = useState("");
@@ -439,6 +460,8 @@ function OrderSummary({
   const shippingPrice = shipping?.price ?? 0;
   const discount = promo ? promo.discountCents / 100 : 0;
   const total = Math.max(0, itemsTotal + shippingPrice - discount);
+
+  useEffect(() => { onTotalChange(total); }, [total, onTotalChange]);
 
   return (
     <aside className="rounded-2xl border border-border bg-white p-6 h-fit sticky top-24 space-y-5">

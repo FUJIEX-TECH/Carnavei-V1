@@ -2,11 +2,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { CheckCircle2 } from "lucide-react";
 import ClearCart from "./ClearCart";
+import PixelPurchase from "./PixelPurchase";
 
 export default function CheckoutSucesso() {
   return (
     <div className="min-h-screen bg-[var(--paper)] flex flex-col items-center justify-center px-4 text-center">
       <ClearCart />
+      <PixelPurchase />
       <Link href="/" className="mb-10">
         <Image src="/carnavei-wordmark.png" alt="Carnavei" width={120} height={32} className="h-8 w-auto" />
       </Link>
