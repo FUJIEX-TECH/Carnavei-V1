@@ -81,6 +81,30 @@ const newProducts = [
     sizes: ["Único"],
     weight: 50, width: 15, height: 1, length: 15,
   },
+  {
+    slug: "lenco-brasilidades",
+    name: "Lenço Brasilidades",
+    category: "Lenço",
+    eyebrow: "Copa 2026",
+    tagline: "Tudo que o Brasil tem de bom, num só lenço.",
+    blurb: "Lenço artesanal com a essência do Brasil em cada detalhe — mapa, bandeira, tucano, bola, taça, coqueiro e carnaval. Para usar no pescoço, na cabeça ou no cabelo.",
+    details: "Tecido leve · estampa Copa 2026 · uso versátil (pescoço, cabeça, cabelo) · tamanho único",
+    hero: "/images/lenco-brasilidades-1.jpg",
+    heroPosition: "center 40%",
+    thumbnail: "/images/lenco-brasilidades-2.jpg",
+    images: [
+      "/images/lenco-brasilidades-1.jpg",
+      "/images/lenco-brasilidades-2.jpg",
+      "/images/lenco-brasilidades-3.jpg",
+      "/images/lenco-brasilidades-4.jpg",
+      "/images/lenco-brasilidades-5.jpg",
+      "/images/lenco-brasilidades-6.jpg",
+      "/images/lenco-brasilidades-7.jpg",
+    ],
+    price: 5000, // R$ 50,00 em centavos
+    sizes: ["Único"],
+    weight: 50, width: 15, height: 1, length: 15,
+  },
 ];
 
 async function main() {
