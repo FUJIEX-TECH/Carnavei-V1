@@ -57,6 +57,30 @@ const newProducts = [
     sizes: ["Único"],
     weight: 50, width: 15, height: 1, length: 15,
   },
+  {
+    slug: "lenco-made-in-br",
+    name: "Lenço Made in BR",
+    category: "Lenço",
+    eyebrow: "Copa 2026",
+    tagline: "Ela é brasileira — feito à mão, do Brasil pro mundo.",
+    blurb: "Lenço artesanal com estampa tropical brasileira — ararajuba, hibisco e a energia da torcida. Para usar no pescoço, na cabeça ou no cabelo.",
+    details: "Tecido leve · estampa tropical Copa 2026 · uso versátil (pescoço, cabeça, cabelo) · tamanho único",
+    hero: "/images/lenco-made-br-1.jpg",
+    heroPosition: "center 40%",
+    thumbnail: "/images/lenco-made-br-4.jpg",
+    images: [
+      "/images/lenco-made-br-1.jpg",
+      "/images/lenco-made-br-2.jpg",
+      "/images/lenco-made-br-3.jpg",
+      "/images/lenco-made-br-4.jpg",
+      "/images/lenco-made-br-5.jpg",
+      "/images/lenco-made-br-6.jpg",
+      "/images/lenco-made-br-7.jpg",
+    ],
+    price: 5000, // R$ 50,00 em centavos
+    sizes: ["Único"],
+    weight: 50, width: 15, height: 1, length: 15,
+  },
 ];
 
 async function main() {
