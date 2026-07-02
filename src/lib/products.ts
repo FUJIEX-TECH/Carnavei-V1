@@ -26,28 +26,6 @@ export const maxInstallments = (priceReais: number): number =>
 
 export const PRODUCTS: Product[] = [
   {
-    id: "choker-branca",
-    name: "Choker Bandana Branca",
-    category: "Choker",
-    price: 60,
-    eyebrow: "Copa 2026",
-    tagline: "O branco que torce junto.",
-    hero: "/images/choker-branca-2.jpg",
-    thumbnail: "/images/choker-branca-6.jpg",
-    images: [
-      "/images/choker-branca-2.jpg",
-      "/images/choker-branca-4.jpg",
-      "/images/choker-branca-5.jpg",
-      "/images/choker-branca-3.jpg",
-      "/images/choker-branca-1.jpg",
-      "/images/choker-branca-6.jpg",
-    ],
-    blurb: "Bandana branca com charms dourados — apito, chuteira e a bandeira esmaltada do Brasil. Feita à mão pra quem vai torcer com estilo.",
-    details: "Tecido de algodão estampado · charms banhados a ouro 18k · apito · chuteira · bandeira esmaltada · fecho ajustável",
-    sizes: ["Ajustável"],
-    soldOutSizes: [],
-  },
-  {
     id: "bolsa-canarinho",
     name: "Bolsa Canarinho",
     category: "Bolsa",

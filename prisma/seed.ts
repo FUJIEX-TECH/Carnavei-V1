@@ -12,28 +12,6 @@ neonConfig.webSocketConstructor = ws;
 
 const products = [
   {
-    slug: "choker-branca",
-    name: "Choker Bandana Branca",
-    category: "Choker",
-    eyebrow: "Copa 2026",
-    tagline: "O branco que torce junto.",
-    blurb: "Bandana branca com charms dourados — apito, chuteira e a bandeira esmaltada do Brasil. Feita à mão pra quem vai torcer com estilo.",
-    details: "Tecido de algodão estampado · charms banhados a ouro 18k · apito · chuteira · bandeira esmaltada · fecho ajustável",
-    hero: "/images/choker-branca-2.jpg",
-    thumbnail: "/images/choker-branca-6.jpg",
-    images: [
-      "/images/choker-branca-2.jpg",
-      "/images/choker-branca-4.jpg",
-      "/images/choker-branca-5.jpg",
-      "/images/choker-branca-3.jpg",
-      "/images/choker-branca-1.jpg",
-      "/images/choker-branca-6.jpg",
-    ],
-    price: 6000,
-    sizes: ["Ajustável"],
-    weight: 300, width: 12, height: 2, length: 17,
-  },
-  {
     slug: "bolsa-canarinho",
     name: "Bolsa Canarinho",
     category: "Bolsa",
